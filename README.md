@@ -42,7 +42,7 @@ Report COCO bounding-box AP over IoU thresholds 0.50–0.95, with All, Base, and
 
 Use `annotations/closed_set/train.json` for training and `annotations/closed_set/test.json` for testing, with all 21 categories supervised. `all.json` combines the two fixed splits for dataset inspection; it is not a training split.
 
-The release supplies COCO, VOC, and YOLO annotations for the main collection. There is **no separate validation split**. The provided configuration helper leaves `val` unset rather than treating the test set as validation.
+The closed-set benchmark uses the fixed training and test partitions above. The release supplies COCO, VOC, and YOLO annotations, and the closed-set YOLO configuration helper leaves `val` unset.
 
 ### Matched ordinary/camouflaged comparison
 
@@ -51,6 +51,20 @@ Each domain contains 187 training images and 86 test images from 14 shared categ
 Train each detector on each domain using the same initialization and training budget, and evaluate both models on both test domains. This produces four combinations: ordinary→ordinary, ordinary→camouflaged, camouflaged→ordinary, and camouflaged→camouflaged.
 
 The active category IDs are `1, 2, 4, 5, 6, 10, 11, 12, 14, 15, 16, 17, 19, 21`. Matched COCO files retain the full 21-category metadata for a consistent category mapping; only these 14 categories have annotations. The archive includes the **273-image matched ordinary subset**, not the larger 502-image ordinary control pool described during benchmark construction.
+
+### Validation-based scoring study (Table 18)
+
+[Download the Table 18 image-ID manifest](Table18_CamoInsect_image_IDs.txt) for the comparison of two scoring rules on CamoInsect. The manifest is provided alongside this README. Its numeric IDs match `images[].id` in the archive's `annotations/closed_set/all.json`.
+
+| Partition of the original training split | Images |
+|---|---:|
+| Base images used for model fitting | 1,576 |
+| Images used for scoring-rule selection | 477 |
+| Unused images containing Novel objects | 332 |
+| Training images excluded because they share a documented scene with a test image | 3 |
+| **Total** | **2,388** |
+
+All three training seeds (42, 43, and 44) used these same partitions. After rule selection on the validation split, both rules were evaluated on the original 1,024 test images.
 
 ## Categories and vocabulary
 
